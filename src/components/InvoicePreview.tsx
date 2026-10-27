@@ -268,7 +268,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
         {/* Footer */}
         <div style={{ textAlign: 'center', marginTop: 18, paddingTop: 14, borderTop: `1px solid ${s.border}` }}>
           <div style={{ fontSize: 11, color: s.label }}>Terima kasih atas kepercayaan Anda.</div>
-          <div style={{ fontSize: 10, color: s.label, marginTop: 2 }}>Dampingcare · Pendampingan Medis Profesional</div>
+          <div style={{ fontSize: 10, color: s.label, marginTop: 2 }}>Dampingcare</div>
         </div>
       </div>
     </div>
