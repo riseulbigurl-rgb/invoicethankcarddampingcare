@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { FileText, CreditCard, CheckCircle2, Clock, StickyNote, PenTool, Eye, Image as ImageIcon, Settings2, Heart } from 'lucide-react';
 import LogoUploader from '../components/LogoUploader';
 import SignaturePadInput from '../components/SignaturePadInput';
@@ -10,6 +10,8 @@ import {
   todayISO,
   generateInvoiceNumber,
 } from '../lib/download';
+
+const DEFAULT_LOGO = '/cropped_circle_image_(1) copy.png';
 
 export default function InvoiceGenerator() {
   const [template, setTemplate] = useState<InvoiceTemplateId>('skyblue');
@@ -30,13 +32,38 @@ export default function InvoiceGenerator() {
     dpAmount: 0,
     paymentStatus: 'belum',
     notes: '',
-    logo: '/cropped_circle_image_(1) copy.png',
+    logo: DEFAULT_LOGO,
     signature: null,
   });
   const [totalInput, setTotalInput] = useState('');
   const [dpInput, setDpInput] = useState('');
 
   const previewRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let active = true;
+    fetch(DEFAULT_LOGO)
+      .then((response) => {
+        if (!response.ok) throw new Error('Logo tidak ditemukan');
+        return response.blob();
+      })
+      .then((blob) => new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result) : reject(new Error('Logo tidak dapat dibaca'));
+        reader.onerror = () => reject(reader.error ?? new Error('Logo tidak dapat dibaca'));
+        reader.readAsDataURL(blob);
+      }))
+      .then((logoDataUrl) => {
+        if (active) {
+          setData((current) => current.logo === DEFAULT_LOGO ? { ...current, logo: logoDataUrl } : current);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const update = <K extends keyof InvoiceData>(key: K, value: InvoiceData[K]) => {
     setData((d) => ({ ...d, [key]: value }));
