@@ -23,7 +23,7 @@ export default function InvoiceGenerator() {
     patientName: '',
     assistanceType: '',
     hospital: '',
-    companionName: '',
+    companionName: 'Rieke Devi Fiana',
     duration: '',
     totalAmount: 0,
     useDP: false,
