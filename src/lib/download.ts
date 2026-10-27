@@ -19,6 +19,8 @@ export async function downloadDocument(opts: DownloadOptions): Promise<void> {
   const canvas = await html2canvas(element, {
     scale: SCALE,
     useCORS: true,
+    allowTaint: false,
+    imageTimeout: 15000,
     backgroundColor: '#ffffff',
     logging: false,
     windowWidth: element.scrollWidth,
@@ -40,14 +42,18 @@ export async function downloadDocument(opts: DownloadOptions): Promise<void> {
   } else {
     const mime = format === 'png' ? 'image/png' : 'image/jpeg';
     const quality = format === 'jpg' ? 0.95 : undefined;
-    const dataUrl = quality !== undefined ? canvas.toDataURL(mime, quality) : canvas.toDataURL(mime);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mime, quality));
+    if (!blob) throw new Error('Gagal menyiapkan file gambar');
+
     onProgress?.(85);
+    const objectUrl = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = dataUrl;
+    link.href = objectUrl;
     link.download = filename;
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
   }
 
   onProgress?.(100);

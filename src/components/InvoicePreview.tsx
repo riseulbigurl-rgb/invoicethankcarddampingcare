@@ -250,35 +250,27 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
       <div
         style={{
           position: 'absolute',
-          top: '50%',
+          top: '58%',
           left: '50%',
-          width: '180%',
           zIndex: 2,
           pointerEvents: 'none',
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          alignContent: 'center',
-          gap: '36px 28px',
           transform: 'translate(-50%, -50%) rotate(-28deg)',
         }}
       >
-        {Array.from({ length: 36 }).map((_, i) => (
-          <span
-            key={i}
-            style={{
-              fontSize: 28,
-              fontWeight: 800,
-              letterSpacing: 1,
-              color: s.accent,
-              opacity: 0.07,
-              whiteSpace: 'nowrap',
-              userSelect: 'none',
-            }}
-          >
-            Dampingcare
-          </span>
-        ))}
+        <span
+          style={{
+            display: 'block',
+            fontSize: 42,
+            fontWeight: 800,
+            letterSpacing: 3,
+            color: s.accent,
+            opacity: 0.08,
+            whiteSpace: 'nowrap',
+            userSelect: 'none',
+          }}
+        >
+          Dampingcare
+        </span>
       </div>
 
       {/* Header */}

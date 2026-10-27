@@ -11,12 +11,14 @@ interface DownloadButtonsProps {
 export default function DownloadButtons({ getTarget, baseFilename, extensions }: DownloadButtonsProps) {
   const [progress, setProgress] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
 
   const handle = async (fmt: DownloadFormat) => {
     if (busy) return;
     const el = getTarget();
     if (!el) return;
     setBusy(true);
+    setError('');
     setProgress(0);
     try {
       await downloadDocument({
@@ -28,6 +30,7 @@ export default function DownloadButtons({ getTarget, baseFilename, extensions }:
       setTimeout(() => setProgress(null), 600);
     } catch (e) {
       console.error(e);
+      setError('File belum berhasil dibuat. Silakan coba lagi.');
       setProgress(null);
     } finally {
       setBusy(false);
@@ -36,6 +39,7 @@ export default function DownloadButtons({ getTarget, baseFilename, extensions }:
 
   return (
     <div className="flex flex-col gap-3">
+      {error && <p className="text-xs text-red-500 text-center">{error}</p>}
       {progress !== null && (
         <div className="flex flex-col gap-1.5">
           <div className="progress-track">
