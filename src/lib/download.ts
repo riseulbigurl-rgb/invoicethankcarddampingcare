@@ -15,6 +15,7 @@ const SCALE = 2;
 export async function downloadDocument(opts: DownloadOptions): Promise<void> {
   const { element, format, filename, onProgress } = opts;
   onProgress?.(10);
+  await waitForImages(element);
 
   const canvas = await html2canvas(element, {
     scale: SCALE,
@@ -57,6 +58,24 @@ export async function downloadDocument(opts: DownloadOptions): Promise<void> {
   }
 
   onProgress?.(100);
+}
+
+async function waitForImages(element: HTMLElement): Promise<void> {
+  const images = Array.from(element.querySelectorAll('img'));
+  await Promise.all(
+    images.map(async (image) => {
+      if (!image.complete) {
+        await new Promise<void>((resolve) => {
+          image.addEventListener('load', () => resolve(), { once: true });
+          image.addEventListener('error', () => resolve(), { once: true });
+        });
+      }
+
+      if (image.complete && image.naturalWidth > 0 && typeof image.decode === 'function') {
+        await image.decode().catch(() => undefined);
+      }
+    }),
+  );
 }
 
 export function formatRupiah(value: number): string {

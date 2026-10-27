@@ -301,7 +301,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
                   zIndex: 3,
                 }}
               >
-                <img src={data.logo} alt="logo" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: '50%', position: 'relative', zIndex: 3 }} />
+                <img src={data.logo} alt="logo" crossOrigin="anonymous" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: '50%', position: 'relative', zIndex: 3 }} />
               </div>
             )}
             <div style={{ minWidth: 0 }}>
