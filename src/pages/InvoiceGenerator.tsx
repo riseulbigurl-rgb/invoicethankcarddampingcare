@@ -28,7 +28,7 @@ export default function InvoiceGenerator() {
     dpAmount: 0,
     paymentStatus: 'belum',
     notes: '',
-    logo: null,
+    logo: '/cropped_circle_image_(1).png',
     signature: null,
   });
   const [totalInput, setTotalInput] = useState('');

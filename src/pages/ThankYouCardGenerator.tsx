@@ -21,7 +21,7 @@ export default function ThankYouCardGenerator() {
     from: '',
     role: '',
     date: '',
-    logo: null,
+    logo: '/cropped_circle_image_(1).png',
   });
   const [style, setStyle] = useState<ThankYouStyle>({
     fontFamily: 'poppins',
