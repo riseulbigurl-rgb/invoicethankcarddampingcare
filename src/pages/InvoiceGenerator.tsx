@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react';
-import { FileText, CreditCard, CheckCircle2, Clock, StickyNote, PenTool, Eye, Image as ImageIcon, Settings2 } from 'lucide-react';
+import { FileText, CreditCard, CheckCircle2, Clock, StickyNote, PenTool, Eye, Image as ImageIcon, Settings2, Heart } from 'lucide-react';
 import LogoUploader from '../components/LogoUploader';
 import SignaturePadInput from '../components/SignaturePadInput';
 import DownloadButtons from '../components/DownloadButtons';
-import InvoicePreview, { INVOICE_TEMPLATES, type InvoiceData, type InvoiceTemplateId } from '../components/InvoicePreview';
+import InvoicePreview, { INVOICE_TEMPLATES, SERVICE_CATEGORIES, type InvoiceData, type InvoiceTemplateId, type ServiceMode, type ServiceCategory } from '../components/InvoicePreview';
 import {
   formatRupiah,
   parseRupiahInput,
@@ -16,6 +16,8 @@ export default function InvoiceGenerator() {
   const [data, setData] = useState<InvoiceData>({
     invoiceNumber: generateInvoiceNumber(),
     date: todayISO(),
+    serviceMode: 'pasien',
+    serviceCategory: '',
     patientName: '',
     assistanceType: '',
     hospital: '',
@@ -58,6 +60,41 @@ export default function InvoiceGenerator() {
         <p className="text-sm text-gray-500 mt-1.5 leading-relaxed">Buat invoice profesional dengan cepat, lengkap, dan siap diunduh.</p>
       </div>
 
+      {/* Service Mode */}
+      <Section icon={<Heart size={16} />} title="Jenis Layanan">
+        <div className="grid grid-cols-2 gap-2.5">
+          <button
+            className={`toggle-pill ${data.serviceMode === 'pasien' ? 'active' : ''}`}
+            onClick={() => update('serviceMode', 'pasien')}
+          >
+            Pendamping Pasien
+          </button>
+          <button
+            className={`toggle-pill ${data.serviceMode === 'non-pasien' ? 'active' : ''}`}
+            onClick={() => update('serviceMode', 'non-pasien')}
+          >
+            Non-Pasien
+          </button>
+        </div>
+        {data.serviceMode === 'non-pasien' && (
+          <div className="mt-3">
+            <label className="field-label">Kategori Layanan</label>
+            <div className="grid grid-cols-3 gap-2">
+              {SERVICE_CATEGORIES.map((c) => (
+                <button
+                  key={c.id}
+                  className={`toggle-pill ${data.serviceCategory === c.id ? 'active' : ''}`}
+                  onClick={() => update('serviceCategory', c.id as ServiceCategory)}
+                  style={{ fontSize: 12 }}
+                >
+                  {c.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </Section>
+
       {/* Template */}
       <Section icon={<Settings2 size={16} />} title="Template Invoice">
         <div className="grid grid-cols-2 gap-2.5">
@@ -90,23 +127,25 @@ export default function InvoiceGenerator() {
             <input type="date" className="field-input" value={data.date} onChange={(e) => update('date', e.target.value)} />
           </div>
           <div>
-            <label className="field-label">Nama Pasien</label>
-            <input className="field-input" value={data.patientName} onChange={(e) => update('patientName', e.target.value)} placeholder="Nama pasien" />
+            <label className="field-label">{data.serviceMode === 'non-pasien' ? 'Nama Klien' : 'Nama Pasien'}</label>
+            <input className="field-input" value={data.patientName} onChange={(e) => update('patientName', e.target.value)} placeholder={data.serviceMode === 'non-pasien' ? 'Nama klien' : 'Nama pasien'} />
           </div>
+          {data.serviceMode === 'pasien' && (
+            <div>
+              <label className="field-label">Pendampingan</label>
+              <input className="field-input" value={data.assistanceType} onChange={(e) => update('assistanceType', e.target.value)} placeholder="Jenis pendampingan" />
+            </div>
+          )}
           <div>
-            <label className="field-label">Pendampingan</label>
-            <input className="field-input" value={data.assistanceType} onChange={(e) => update('assistanceType', e.target.value)} placeholder="Jenis pendampingan" />
-          </div>
-          <div>
-            <label className="field-label">Rumah Sakit / Lokasi</label>
-            <input className="field-input" value={data.hospital} onChange={(e) => update('hospital', e.target.value)} placeholder="Rumah sakit / lokasi" />
+            <label className="field-label">{data.serviceMode === 'non-pasien' ? 'Lokasi / Alamat' : 'Rumah Sakit / Lokasi'}</label>
+            <input className="field-input" value={data.hospital} onChange={(e) => update('hospital', e.target.value)} placeholder={data.serviceMode === 'non-pasien' ? 'Lokasi / alamat' : 'Rumah sakit / lokasi'} />
           </div>
           <div>
             <label className="field-label">Nama Pendamping</label>
             <input className="field-input" value={data.companionName} onChange={(e) => update('companionName', e.target.value)} placeholder="Nama pendamping" />
           </div>
           <div>
-            <label className="field-label">Durasi Pendampingan</label>
+            <label className="field-label">Durasi</label>
             <input className="field-input" value={data.duration} onChange={(e) => update('duration', e.target.value)} placeholder="Contoh: 8 jam" />
           </div>
         </div>

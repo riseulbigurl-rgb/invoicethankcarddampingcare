@@ -1,9 +1,26 @@
 import { forwardRef } from 'react';
 import { formatRupiah, formatDateID } from '../lib/download';
 
+export type ServiceMode = 'pasien' | 'non-pasien';
+export type ServiceCategory = '' | 'jaga-bayi' | 'jaga-anak' | 'jaga-lansia';
+
+export const SERVICE_CATEGORIES: { id: Exclude<ServiceCategory, ''>; name: string }[] = [
+  { id: 'jaga-bayi', name: 'Jaga Bayi' },
+  { id: 'jaga-anak', name: 'Jaga Anak' },
+  { id: 'jaga-lansia', name: 'Jaga Lansia' },
+];
+
+export const SERVICE_CATEGORY_LABEL: Record<Exclude<ServiceCategory, ''>, string> = {
+  'jaga-bayi': 'Jaga Bayi',
+  'jaga-anak': 'Jaga Anak',
+  'jaga-lansia': 'Jaga Lansia',
+};
+
 export interface InvoiceData {
   invoiceNumber: string;
   date: string;
+  serviceMode: ServiceMode;
+  serviceCategory: ServiceCategory;
   patientName: string;
   assistanceType: string;
   hospital: string;
@@ -152,7 +169,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
             ) : (
               <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>Dampingcare</div>
             )}
-            <div style={{ fontSize: 11, opacity: 0.85, marginTop: 2 }}>Invoice Pendampingan</div>
+            <div style={{ fontSize: 11, opacity: 0.85, marginTop: 2 }}>{data.serviceMode === 'non-pasien' ? 'Invoice Layanan' : 'Invoice Pendampingan'}</div>
           </div>
           <div style={{ textAlign: 'right' }}>
             <div style={{ fontSize: 10, opacity: 0.8, textTransform: 'uppercase', letterSpacing: 1 }}>Invoice</div>
@@ -164,16 +181,16 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
 
       {/* Body */}
       <div style={{ padding: '20px 22px', background: s.bg }}>
-        {/* Patient info */}
+        {/* Patient/Client info */}
         <div style={{ background: s.card, borderRadius: 14, padding: 16, border: `1px solid ${s.border}` }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: s.accent, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 10 }}>
-            Informasi Pasien
+            {data.serviceMode === 'non-pasien' ? 'Informasi Klien' : 'Informasi Pasien'}
           </div>
-          <Row label="Nama Pasien" value={data.patientName || '-'} s={s} />
-          <Row label="Pendampingan" value={data.assistanceType || '-'} s={s} />
-          <Row label="Rumah Sakit / Lokasi" value={data.hospital || '-'} s={s} />
+          <Row label={data.serviceMode === 'non-pasien' ? 'Nama Klien' : 'Nama Pasien'} value={data.patientName || '-'} s={s} />
+          <Row label={data.serviceMode === 'non-pasien' ? 'Jenis Layanan' : 'Pendampingan'} value={data.serviceMode === 'non-pasien' && data.serviceCategory ? SERVICE_CATEGORY_LABEL[data.serviceCategory] : (data.assistanceType || '-')} s={s} />
+          <Row label={data.serviceMode === 'non-pasien' ? 'Lokasi / Alamat' : 'Rumah Sakit / Lokasi'} value={data.hospital || '-'} s={s} />
           <Row label="Nama Pendamping" value={data.companionName || '-'} s={s} />
-          <Row label="Durasi Pendampingan" value={data.duration || '-'} s={s} last />
+          <Row label="Durasi" value={data.duration || '-'} s={s} last />
         </div>
 
         {/* Payment */}
