@@ -288,7 +288,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
           color: s.headerText,
           padding: '26px 22px 22px',
           position: 'relative',
-          zIndex: 1,
+          zIndex: 3,
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
@@ -298,16 +298,18 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
                 style={{
                   width: 44,
                   height: 44,
-                  borderRadius: 12,
+                  borderRadius: '50%',
                   background: '#ffffff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
                   overflow: 'hidden',
+                  position: 'relative',
+                  zIndex: 3,
                 }}
               >
-                <img src={data.logo} alt="logo" style={{ maxWidth: 38, maxHeight: 38, objectFit: 'contain' }} />
+                <img src={data.logo} alt="logo" style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: '50%', position: 'relative', zIndex: 3 }} />
               </div>
             )}
             <div style={{ minWidth: 0 }}>
