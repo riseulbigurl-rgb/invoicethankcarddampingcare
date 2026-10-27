@@ -395,9 +395,24 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
               Informasi Pembayaran
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: `1px solid ${s.border}` }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: `1px solid ${s.border}` }}>
             <span style={{ fontSize: 12, color: s.label }}>Total Tagihan</span>
-            <span style={{ fontSize: 13, fontWeight: 700 }}>{formatRupiah(data.totalAmount)}</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 7 }}>
+              <span
+                style={{
+                  background: data.paymentStatus === 'lunas' ? '#16a34a' : '#dc2626',
+                  color: '#ffffff',
+                  padding: '4px 8px',
+                  borderRadius: 999,
+                  fontSize: 8,
+                  fontWeight: 800,
+                  letterSpacing: 0.7,
+                }}
+              >
+                {data.paymentStatus === 'lunas' ? 'LUNAS' : 'BELUM LUNAS'}
+              </span>
+              <span style={{ fontSize: 13, fontWeight: 700 }}>{formatRupiah(data.totalAmount)}</span>
+            </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: `1px solid ${s.border}` }}>
             <span style={{ fontSize: 12, color: s.label }}>DP</span>
@@ -420,41 +435,6 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
             <span style={{ fontSize: 12, fontWeight: 600, opacity: 0.9 }}>Sisa Pembayaran</span>
             <span style={{ fontSize: 16, fontWeight: 800 }}>{formatRupiah(remaining)}</span>
           </div>
-        </div>
-
-        {/* Status badge */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 14 }}>
-          {data.paymentStatus === 'lunas' ? (
-            <div
-              style={{
-                background: '#16a34a',
-                color: '#fff',
-                padding: '10px 28px',
-                borderRadius: 999,
-                fontSize: 15,
-                fontWeight: 800,
-                letterSpacing: 1.5,
-                boxShadow: '0 4px 14px rgba(22,163,74,0.3)',
-              }}
-            >
-              LUNAS
-            </div>
-          ) : (
-            <div
-              style={{
-                background: '#dc2626',
-                color: '#fff',
-                padding: '10px 28px',
-                borderRadius: 999,
-                fontSize: 15,
-                fontWeight: 800,
-                letterSpacing: 1.5,
-                boxShadow: '0 4px 14px rgba(220,38,38,0.3)',
-              }}
-            >
-              BELUM LUNAS
-            </div>
-          )}
         </div>
 
         {/* Notes */}
