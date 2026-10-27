@@ -389,7 +389,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
             ) : (
               <div style={{ height: 70, width: 150, borderBottom: `1px solid ${s.border}` }} />
             )}
-            <div style={{ fontSize: 12, fontWeight: 600, marginTop: 4 }}>{data.companionName || 'Pendamping'}</div>
+            <div style={{ fontSize: 12, fontWeight: 600, marginTop: 4 }}>{data.companionName || 'PJ DAMPINGCARE'}</div>
           </div>
         </div>
 
