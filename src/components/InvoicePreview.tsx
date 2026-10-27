@@ -253,7 +253,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
           top: '50%',
           left: '50%',
           width: '180%',
-          zIndex: 0,
+          zIndex: 2,
           pointerEvents: 'none',
           display: 'flex',
           flexWrap: 'wrap',
@@ -486,7 +486,8 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
             ) : (
               <div style={{ height: 70, width: 150, borderBottom: `1px solid ${s.border}` }} />
             )}
-            <div style={{ fontSize: 12, fontWeight: 600, marginTop: 4 }}>{data.companionName || 'PJ DAMPINGCARE'}</div>
+            <div style={{ fontSize: 12, fontWeight: 700, marginTop: 4 }}>Rieke Devi Fiana</div>
+            <div style={{ fontSize: 10, color: s.label, marginTop: 2 }}>(PJ Dampingcare)</div>
           </div>
         </div>
 

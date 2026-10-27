@@ -3,7 +3,7 @@ import { FileText, CreditCard, CheckCircle2, Clock, StickyNote, PenTool, Eye, Im
 import LogoUploader from '../components/LogoUploader';
 import SignaturePadInput from '../components/SignaturePadInput';
 import DownloadButtons from '../components/DownloadButtons';
-import InvoicePreview, { INVOICE_TEMPLATES, SERVICE_CATEGORIES, type InvoiceData, type InvoiceTemplateId, type ServiceMode, type ServiceCategory } from '../components/InvoicePreview';
+import InvoicePreview, { INVOICE_TEMPLATES, SERVICE_CATEGORIES, type InvoiceData, type InvoiceTemplateId, type ServiceCategory } from '../components/InvoicePreview';
 import {
   formatRupiah,
   parseRupiahInput,
@@ -23,14 +23,14 @@ export default function InvoiceGenerator() {
     patientName: '',
     assistanceType: '',
     hospital: '',
-    companionName: 'Rieke Devi Fiana',
+    companionName: '',
     duration: '',
     totalAmount: 0,
     useDP: false,
     dpAmount: 0,
     paymentStatus: 'belum',
     notes: '',
-    logo: '/cropped_circle_image_(1).png',
+    logo: '/cropped_circle_image_(1) copy.png',
     signature: null,
   });
   const [totalInput, setTotalInput] = useState('');
