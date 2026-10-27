@@ -12,12 +12,14 @@ import {
 } from '../lib/download';
 
 export default function InvoiceGenerator() {
-  const [template, setTemplate] = useState<InvoiceTemplateId>('elegant');
+  const [template, setTemplate] = useState<InvoiceTemplateId>('skyblue');
   const [data, setData] = useState<InvoiceData>({
     invoiceNumber: generateInvoiceNumber(),
     date: todayISO(),
     serviceMode: 'pasien',
     serviceCategory: '',
+    ordererName: '',
+    whatsappNumber: '',
     patientName: '',
     assistanceType: '',
     hospital: '',
@@ -125,6 +127,14 @@ export default function InvoiceGenerator() {
           <div>
             <label className="field-label">Tanggal</label>
             <input type="date" className="field-input" value={data.date} onChange={(e) => update('date', e.target.value)} />
+          </div>
+          <div>
+            <label className="field-label">Nama Pemesan Layanan</label>
+            <input className="field-input" value={data.ordererName} onChange={(e) => update('ordererName', e.target.value)} placeholder="Nama yang order layanan" />
+          </div>
+          <div>
+            <label className="field-label">No. WhatsApp Pemesan</label>
+            <input className="field-input" value={data.whatsappNumber} onChange={(e) => update('whatsappNumber', e.target.value)} placeholder="Contoh: 0812xxxxxxx" inputMode="tel" />
           </div>
           <div>
             <label className="field-label">{data.serviceMode === 'non-pasien' ? 'Nama Klien' : 'Nama Pasien'}</label>

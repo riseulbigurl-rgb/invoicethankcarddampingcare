@@ -21,6 +21,8 @@ export interface InvoiceData {
   date: string;
   serviceMode: ServiceMode;
   serviceCategory: ServiceCategory;
+  ordererName: string;
+  whatsappNumber: string;
   patientName: string;
   assistanceType: string;
   hospital: string;
@@ -37,6 +39,7 @@ export interface InvoiceData {
 
 export const INVOICE_TEMPLATES = [
   { id: 'minimal', name: 'Minimalis Putih' },
+  { id: 'skyblue', name: 'Sky Blue' },
   { id: 'elegant', name: 'Elegant Pink' },
   { id: 'modern', name: 'Modern Gradient' },
   { id: 'professional', name: 'Professional Blue' },
@@ -81,6 +84,20 @@ const TPL_STYLES: Record<InvoiceTemplateId, {
     tableHead: '#f7f7f7',
     totalBg: '#f7f7f7',
     totalText: '#111111',
+    fontFamily: "'Poppins', sans-serif",
+  },
+  skyblue: {
+    bg: '#eef6fb',
+    card: '#ffffff',
+    headerBg: 'linear-gradient(135deg, #5ba8e8 0%, #3b82c4 100%)',
+    headerText: '#ffffff',
+    accent: '#2b7ac4',
+    label: '#6a8caa',
+    value: '#1a2e3a',
+    border: '#cfe4f2',
+    tableHead: '#e6f2fa',
+    totalBg: '#2b7ac4',
+    totalText: '#ffffff',
     fontFamily: "'Poppins', sans-serif",
   },
   elegant: {
@@ -236,7 +253,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
           top: '50%',
           left: '50%',
           width: '180%',
-          zIndex: 9999,
+          zIndex: 0,
           pointerEvents: 'none',
           display: 'flex',
           flexWrap: 'wrap',
@@ -253,8 +270,8 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
               fontSize: 28,
               fontWeight: 800,
               letterSpacing: 1,
-              color: '#9ca3af',
-              opacity: 0.13,
+              color: s.accent,
+              opacity: 0.07,
               whiteSpace: 'nowrap',
               userSelect: 'none',
             }}
@@ -269,33 +286,88 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
         style={{
           background: s.headerBg,
           color: s.headerText,
-          padding: '24px 22px',
-          borderRadius: 0,
+          padding: '26px 22px 22px',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
-          <div style={{ flex: 1 }}>
-            {data.logo ? (
-              <img src={data.logo} alt="logo" style={{ maxHeight: 52, maxWidth: 140, objectFit: 'contain', marginBottom: 10, display: 'block' }} />
-            ) : (
-              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>Dampingcare</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
+            {data.logo && (
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 12,
+                  background: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  overflow: 'hidden',
+                }}
+              >
+                <img src={data.logo} alt="logo" style={{ maxWidth: 38, maxHeight: 38, objectFit: 'contain' }} />
+              </div>
             )}
-            <div style={{ fontSize: 11, opacity: 0.85, marginTop: 2 }}>{data.serviceMode === 'non-pasien' ? 'Invoice Layanan' : 'Invoice Pendampingan'}</div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: -0.3, lineHeight: 1.1 }}>
+                {data.logo ? 'Dampingcare' : 'Dampingcare'}
+              </div>
+              <div style={{ fontSize: 10, opacity: 0.85, marginTop: 2, letterSpacing: 0.3 }}>
+                {data.serviceMode === 'non-pasien' ? 'Invoice Layanan' : 'Invoice Pendampingan'}
+              </div>
+            </div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: 10, opacity: 0.8, textTransform: 'uppercase', letterSpacing: 1 }}>Invoice</div>
-            <div style={{ fontSize: 14, fontWeight: 700, marginTop: 2 }}>{data.invoiceNumber}</div>
+            <div style={{ fontSize: 10, opacity: 0.8, textTransform: 'uppercase', letterSpacing: 1.2 }}>Invoice</div>
+            <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>{data.invoiceNumber}</div>
             <div style={{ fontSize: 11, opacity: 0.85, marginTop: 2 }}>{formatDateID(data.date)}</div>
           </div>
         </div>
       </div>
 
+      {/* Accent strip */}
+      <div style={{ height: 3, background: s.accent, position: 'relative', zIndex: 1 }} />
+
       {/* Body */}
-      <div style={{ padding: '20px 22px', background: s.bg }}>
+      <div style={{ padding: '18px 22px', background: s.bg, position: 'relative', zIndex: 1 }}>
+        {/* Orderer info */}
+        <div
+          style={{
+            background: s.card,
+            borderRadius: 14,
+            padding: 14,
+            border: `1px solid ${s.border}`,
+            boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+            <div style={{ width: 3, height: 12, background: s.accent, borderRadius: 2 }} />
+            <div style={{ fontSize: 11, fontWeight: 700, color: s.accent, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+              Informasi Pemesan
+            </div>
+          </div>
+          <Row label="Nama Pemesan" value={data.ordererName || '-'} s={s} />
+          <Row label="No. WhatsApp" value={data.whatsappNumber || '-'} s={s} last />
+        </div>
+
         {/* Patient/Client info */}
-        <div style={{ background: s.card, borderRadius: 14, padding: 16, border: `1px solid ${s.border}` }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: s.accent, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 10 }}>
-            {data.serviceMode === 'non-pasien' ? 'Informasi Klien' : 'Informasi Pasien'}
+        <div
+          style={{
+            background: s.card,
+            borderRadius: 14,
+            padding: 14,
+            border: `1px solid ${s.border}`,
+            marginTop: 10,
+            boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+            <div style={{ width: 3, height: 12, background: s.accent, borderRadius: 2 }} />
+            <div style={{ fontSize: 11, fontWeight: 700, color: s.accent, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+              {data.serviceMode === 'non-pasien' ? 'Informasi Klien' : 'Informasi Pasien'}
+            </div>
           </div>
           <Row label={data.serviceMode === 'non-pasien' ? 'Nama Klien' : 'Nama Pasien'} value={data.patientName || '-'} s={s} />
           <Row label={data.serviceMode === 'non-pasien' ? 'Jenis Layanan' : 'Pendampingan'} value={data.serviceMode === 'non-pasien' && data.serviceCategory ? SERVICE_CATEGORY_LABEL[data.serviceCategory] : (data.assistanceType || '-')} s={s} />
@@ -305,9 +377,21 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
         </div>
 
         {/* Payment */}
-        <div style={{ background: s.card, borderRadius: 14, padding: 16, border: `1px solid ${s.border}`, marginTop: 12 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: s.accent, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 10 }}>
-            Informasi Pembayaran
+        <div
+          style={{
+            background: s.card,
+            borderRadius: 14,
+            padding: 14,
+            border: `1px solid ${s.border}`,
+            marginTop: 10,
+            boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+            <div style={{ width: 3, height: 12, background: s.accent, borderRadius: 2 }} />
+            <div style={{ fontSize: 11, fontWeight: 700, color: s.accent, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+              Informasi Pembayaran
+            </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: `1px solid ${s.border}` }}>
             <span style={{ fontSize: 12, color: s.label }}>Total Tagihan</span>
@@ -323,6 +407,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
             style={{
               display: 'flex',
               justifyContent: 'space-between',
+              alignItems: 'center',
               padding: '12px 14px',
               marginTop: 10,
               borderRadius: 10,
@@ -331,12 +416,12 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
             }}
           >
             <span style={{ fontSize: 12, fontWeight: 600, opacity: 0.9 }}>Sisa Pembayaran</span>
-            <span style={{ fontSize: 15, fontWeight: 800 }}>{formatRupiah(remaining)}</span>
+            <span style={{ fontSize: 16, fontWeight: 800 }}>{formatRupiah(remaining)}</span>
           </div>
         </div>
 
         {/* Status badge */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 14 }}>
           {data.paymentStatus === 'lunas' ? (
             <div
               style={{
@@ -344,7 +429,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
                 color: '#fff',
                 padding: '10px 28px',
                 borderRadius: 999,
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: 800,
                 letterSpacing: 1.5,
                 boxShadow: '0 4px 14px rgba(22,163,74,0.3)',
@@ -359,7 +444,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
                 color: '#fff',
                 padding: '10px 28px',
                 borderRadius: 999,
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: 800,
                 letterSpacing: 1.5,
                 boxShadow: '0 4px 14px rgba(220,38,38,0.3)',
@@ -372,16 +457,28 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
 
         {/* Notes */}
         {data.notes && data.notes.trim() && (
-          <div style={{ background: s.card, borderRadius: 14, padding: 16, border: `1px solid ${s.border}`, marginTop: 14 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: s.accent, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 8 }}>
-              Keterangan
+          <div
+            style={{
+              background: s.card,
+              borderRadius: 14,
+              padding: 14,
+              border: `1px solid ${s.border}`,
+              marginTop: 12,
+              boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+              <div style={{ width: 3, height: 12, background: s.accent, borderRadius: 2 }} />
+              <div style={{ fontSize: 11, fontWeight: 700, color: s.accent, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+                Keterangan
+              </div>
             </div>
             <div style={{ fontSize: 12, color: s.value, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{data.notes}</div>
           </div>
         )}
 
         {/* Signature */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 18 }}>
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 11, color: s.label, marginBottom: 6 }}>Tanda Tangan</div>
             {data.signature ? (
@@ -394,7 +491,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
         </div>
 
         {/* Footer */}
-        <div style={{ textAlign: 'center', marginTop: 18, paddingTop: 14, borderTop: `1px solid ${s.border}` }}>
+        <div style={{ textAlign: 'center', marginTop: 16, paddingTop: 14, borderTop: `1px solid ${s.border}` }}>
           <div style={{ fontSize: 11, color: s.label }}>Terima kasih atas kepercayaan Anda.</div>
           <div style={{ fontSize: 10, color: s.label, marginTop: 2 }}>Dampingcare</div>
         </div>
