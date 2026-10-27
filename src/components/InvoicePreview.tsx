@@ -151,8 +151,44 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, 
         padding: 0,
         boxSizing: 'border-box',
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
+      {/* Watermark layer */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '180%',
+          zIndex: 9999,
+          pointerEvents: 'none',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          alignContent: 'center',
+          gap: '36px 28px',
+          transform: 'translate(-50%, -50%) rotate(-28deg)',
+        }}
+      >
+        {Array.from({ length: 36 }).map((_, i) => (
+          <span
+            key={i}
+            style={{
+              fontSize: 28,
+              fontWeight: 800,
+              letterSpacing: 1,
+              color: '#9ca3af',
+              opacity: 0.13,
+              whiteSpace: 'nowrap',
+              userSelect: 'none',
+            }}
+          >
+            Dampingcare
+          </span>
+        ))}
+      </div>
+
       {/* Header */}
       <div
         style={{
